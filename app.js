@@ -11,6 +11,14 @@ const fastify = require("fastify")({
   logger: true,
 });
 
+fastify.get("/health", function (request, reply) {
+  reply.send({ status: "ok" });
+});
+
+fastify.get("/healthz", function (request, reply) {
+  reply.send({ status: "ok" });
+});
+
 fastify.post("/preview-hook", function (request, reply) {
   callGatsbyBuildHook(request, reply, gatsbyBuildHook, true);
 });
