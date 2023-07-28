@@ -1,9 +1,6 @@
 require("dotenv").config();
 const { callGatsbyBuildHook } = require("./handleBuildWebhook");
 
-const gatsbyBuildHook =
-  "https://webhook.gatsbyjs.com/hooks/data_source/publish/";
-
 const port = process.env.PORT || 3000;
 const host = "RENDER" in process.env ? `0.0.0.0` : `localhost`;
 
@@ -20,11 +17,21 @@ fastify.get("/healthz", function (request, reply) {
 });
 
 fastify.post("/preview-hook", function (request, reply) {
-  callGatsbyBuildHook(request, reply, gatsbyBuildHook, true);
+  callGatsbyBuildHook(
+    request,
+    reply,
+    "https://webhook.gatsbyjs.com/hooks/data_source/",
+    true
+  );
 });
 
 fastify.post("/build-hook", function (request, reply) {
-  callGatsbyBuildHook(request, reply, gatsbyBuildHook, false);
+  callGatsbyBuildHook(
+    request,
+    reply,
+    "https://webhook.gatsbyjs.com/hooks/data_source/publish/",
+    false
+  );
 });
 
 fastify.listen({ host: host, port: port }, function (err, address) {
