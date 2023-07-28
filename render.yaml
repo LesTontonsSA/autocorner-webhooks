@@ -1,8 +1,38 @@
 services:
   - type: web
-    name: fastify-hello-world-example
+    name: autocorner-webhooks
     runtime: node
     plan: free
     autoDeploy: false
     buildCommand: npm install
     startCommand: node app.js
+    envVars:
+      - key: PROJECT_IDS_ON_GATSBY_CLOUD
+        value:
+          [
+            {
+              "id": "5c491b14-f493-4b51-8aff-9a686454ec41",
+              "name": "autocorner",
+            },
+            {
+              "id": "611c2897-f881-41d3-96ad-97c75f33310a",
+              "name": "audi_lutry",
+            },
+            {
+              "id": "aaabde57-85a3-480e-a555-509321a6632c",
+              "name": "audi_sion",
+            },
+            {
+              "id": "07f5c7df-2572-4ece-9892-3fe6e753ece0",
+              "name": "occasions_romanel",
+            },
+            {
+              "id": "4632f44b-9cde-469c-9f4a-d5d865eab13e",
+              "name": "occasions_sion",
+            },
+            {
+              "id": "4c85066f-9d36-4955-99aa-a2e07dd1e042",
+              "name": "skoda_romanel",
+            },
+            { "id": "3869858b-0c20-47c1-915c-8a542b1fc8f3", "name": "flotte" },
+          ]
