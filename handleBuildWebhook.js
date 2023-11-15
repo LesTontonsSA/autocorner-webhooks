@@ -1,17 +1,20 @@
 require("dotenv").config();
 const axios = require("axios");
 
-const callGatsbyBuildHook = async (
+const callBuildHook = async (
   request,
   reply,
-  gatsbyBuildHook,
-  isPreview
+  buildHook,
+  isPreview,
+  cloudProvider = "gatsby-cloud"
 ) => {
-  const PROJECT_IDS_ON_GATSBY_CLOUD = process.env.PROJECT_IDS_ON_GATSBY_CLOUD;
+  const CP_PROJECT_IDS = cloudProvider === "netlify" ? process.env.PROJECT_IDS_ON_NETLIFY : process.env.PROJECT_IDS_ON_GATSBY_CLOUD;
 
-  if (!PROJECT_IDS_ON_GATSBY_CLOUD) {
+  if (!CP_PROJECT_IDS) {
     reply.code(500).send({
-      error: "Missing `PROJECT_IDS_ON_GATSBY_CLOUD` environment variable",
+      error: cloudProvider === "netlify" ?
+          "Missing `PROJECT_IDS_ON_NETLIFY` environment variable"
+          : "Missing `PROJECT_IDS_ON_GATSBY_CLOUD` environment variable",
     });
     return;
   }
@@ -20,7 +23,7 @@ const callGatsbyBuildHook = async (
     body: { _type: type },
   } = request;
 
-  const projectIds = getProjectIds(type);
+  const projectIds = getProjectIds(type, CP_PROJECT_IDS);
 
   console.log(
     `Build type = ${type}: build hook called for ${projectIds.length} projects`
@@ -38,7 +41,7 @@ const callGatsbyBuildHook = async (
   const body = isPreview ? request.body : {};
   const responses = await Promise.all(
     projectIds.map((id) =>
-      axios.post(`${gatsbyBuildHook}${id}`, body, { headers })
+      axios.post(`${buildHook}${id}`, body, { headers })
     )
   );
 
@@ -56,8 +59,8 @@ const callGatsbyBuildHook = async (
   });
 };
 
-const getProjectIds = (type) => {
-  const allProjects = JSON.parse(process.env.PROJECT_IDS_ON_GATSBY_CLOUD);
+const getProjectIds = (type, provider_ids) => {
+  const allProjects = JSON.parse(provider_ids);
   const projectName = type ? getProjectName(type) : undefined;
 
   if (projectName) {
@@ -82,4 +85,4 @@ const getProjectName = (type) => {
   return project;
 };
 
-module.exports.callGatsbyBuildHook = callGatsbyBuildHook;
+module.exports.callyBuildHook = callBuildHook;
