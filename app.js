@@ -48,7 +48,7 @@ fastify.post("/build-hook/netlify", function (request, reply) {
   callyBuildHook(
     request,
     reply,
-    "https://api.netlify.com/build_hooks",
+    "https://api.netlify.com/build_hooks/",
     false,
     "netlify"
   );
